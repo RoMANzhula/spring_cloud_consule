@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: default
+  config:
+    import: 'consul:'
+  application:
+    name: product-service
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      acl-token: 6e26527b-5e07-5116-4ade-291fdaf683cb
+      discovery:
+        instance-id: product-service-i1
+      config:
+        acl-token: 6e26527b-5e07-5116-4ade-291fdaf683cb
+
+server:
+  port: 0
