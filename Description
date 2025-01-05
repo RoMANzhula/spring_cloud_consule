@@ -1,0 +1,32 @@
+
+1.  Terminal: docker-compose up -d
+
+2.  Consul: http://localhost:8500
+    Vault:  http://localhost:8200 - in browser input Root Token: root and click on "Sign In".
+
+3. Create agent.json file and add to it:
+    {
+      "acl": {
+        "enabled": true,
+        "default_policy": "allow",                //("deny" - need some permissions settings)
+        "enable_token_persistence": true
+      }
+    }
+
+4.  Get SecretID for Consul:
+    In Docker Desktop -> Terminal -> / # consul acl bootstrap
+    look for token for "Log in" on http://localhost:8500/ui/dc1:
+    SecretID:         e0acd0dd-7486-c01c-74b3-e70408ff1b3d
+
+5. In Consul UI click on Key/Value -> create -> input: config/<here_app_name_from_property>,default/
+        example: config/order-service,default/ (and config/product-service,default/)
+
+6. Click on config -> order-service,default -> create pairs (and product-service,default)
+    6.1. Key or folder: spring.datasource.url
+         Value: jdbc:postgresql://127.0.0.1:5432/NAME_DB
+    6.2. Key or folder: spring.datasource.username
+         Value: YOUR_DB_USERNAME
+    6.3. Key or folder: spring.datasource.password
+         Value: YOUR_DB_PASSWORD
+
+    Run our two services (product and order)
