@@ -9,11 +9,14 @@ spring:
     consul:
       host: localhost
       port: 8500
-      acl-token: 6e26527b-5e07-5116-4ade-291fdaf683cb
+      acl-token: f9a95356-bd4d-2503-9e10-a9b87e03e37c
       discovery:
         instance-id: order-service-i1
       config:
-        acl-token: 6e26527b-5e07-5116-4ade-291fdaf683cb
+        acl-token: f9a95356-bd4d-2503-9e10-a9b87e03e37c
+  sql:
+    init:
+      mode: never # change to 'always' for first running ('never' - for all others)
 
 server:
   port: 0
