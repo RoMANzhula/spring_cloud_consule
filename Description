@@ -30,3 +30,50 @@
          Value: YOUR_DB_PASSWORD
 
     Run our two services (product and order)
+
+7. Security settings in Consul UI:
+    7.1. Docker -> Terminal: consul acl bootstrap
+            copy SecretId (for exm.: bb348ea1-6876-35b4-1c4f-974cbe95c6e7)
+    7.2. next command in terminal: export CONSUL_HTTP_TOKEN=bb348ea1-6876-35b4-1c4f-974cbe95c6e7
+
+    7.3. Go to http://localhost:8500 and input our SecretId(token)
+    7.4. Go to http://localhost:8500/ui/dc1/acls/policies
+        7.4.1. Add policies key/value for order-service:
+                Name: order-service-kv
+                Rules: key_prefix "config/order-service" {
+                            policy = "read"
+                       }
+        7.4.2. Add policies key/value for product-service:
+                Name: product-service-kv
+                Rules: key_prefix "config/product-service" {
+                           policy = "read"
+                      }
+    7.5. Go to http://localhost:8500/ui/dc1/acls/tokens
+        7.5.1. Add token for order-service
+                Click on "Restrict this token to a local datacenter"
+                Description: Token for order-service
+                Policies: choose our service "order-service-kv"
+                Click on "+ Create New Policy" over Policies row
+                Click on "Service Identity"
+                Name (input name of our service): order-service
+                Click on "Create and apply"
+                Click on "Save"
+        7.5.2. Add token for product-service
+                Click on "Restrict this token to a local datacenter"
+                Description: Token for product-service
+                Policies: choose our service "product-service-kv"
+                Click on "+ Create New Policy" over Policies row
+                Click on "Service Identity"
+                Name (input name of our service): product-service
+                Click on "Create and apply"
+                Click on "Save"
+
+8. Testing our endpoints:
+    8.1. Consul -> Services -> Click on order-service -> again click on order-service
+         get endpoint like this: http://host.docker.internal:60344/
+         and add our mapping endpoint: api/order-service/orders
+         total url http://host.docker.internal:60344/api/order-service/orders
+    8.2. Consul -> Services -> Click on product-service -> again click on product-service
+         get endpoint like this: http://host.docker.internal:51723/
+         and add our mapping endpoint: api/product-service/products
+         total url http://host.docker.internal:51723/api/product-service/products
