@@ -1,23 +1,45 @@
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  main:
+    lazy-initialization: true
   profiles:
     active: default
   config:
-    import: 'consul:'
+    import:
+      - 'vault://'
+      - 'optional:consul:'
   application:
     name: product-service
   cloud:
+    vault:
+      uri: http://127.0.0.1:8200
+      authentication: TOKEN
+      token: root
+      kv:
+        enabled: true
+        backend: secret
+        default-context: product-service
+        profile-separator: '/'
+        secret-backend: secret/data
+      generic:
+        enabled: true
+        application-name: product-service
+      consul:
+        acl-token: ${acl-token}
     consul:
       host: localhost
       port: 8500
       discovery:
         instance-id: product-service-i1
-        acl-token: 9e7f97fc-8c39-31a2-899f-0adc98515438
+        acl-token: c1a2ca23-4d63-f6c6-0991-9d0ef839367d
       config:
-        acl-token: 9e7f97fc-8c39-31a2-899f-0adc98515438
-  sql:
-    init:
-      mode: never # change to 'always' for first running ('never' - for all others)
-
+        acl-token: c1a2ca23-4d63-f6c6-0991-9d0ef839367d
 
 server:
   port: 0
+
+logging:
+  level:
+    org.springframework.cloud.consul: DEBUG
+    org.springframework.cloud.vault: DEBUG
